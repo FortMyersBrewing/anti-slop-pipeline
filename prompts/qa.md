@@ -21,10 +21,42 @@ You produce: tests that verify every acceptance criterion, and a pass/fail verdi
 
 ## What You Test
 
-### For each acceptance criterion in the spec:
-- At least one test that verifies the happy path
-- At least one test for each edge case mentioned in the spec
-- Integration tests where the criterion involves multiple components
+### For EVERY acceptance criterion, test ALL of these layers:
+
+#### 1. Happy Path
+- Valid inputs → expected outputs
+- Normal user flow works as specified
+
+#### 2. Bad Data / Negative Testing
+- What happens with malformed input? (wrong types, bad JSON, invalid formats)
+- What happens with missing required fields? (null, undefined, empty string)
+- What happens with empty collections? (empty list, no results)
+- What happens with oversized input? (too long strings, too many items)
+- Does it return the RIGHT error? (correct status code, helpful message)
+- Does it fail GRACEFULLY? (no stack traces leaked, no partial state)
+
+#### 3. Boundary Conditions
+- Minimum and maximum valid values
+- Off-by-one: one below min, one above max
+- Zero, negative numbers (where applicable)
+- Unicode, special characters, SQL injection strings in text fields
+- Very long strings at field limits
+
+#### 4. Error Handling
+- Does the error response match the API contract?
+- Is the error message helpful (not "Internal Server Error")?
+- Does a failure in one operation leave the system in a clean state? (no half-written data)
+- Are errors logged appropriately?
+
+#### 5. Auth / Permissions (if applicable)
+- Unauthenticated access → 401
+- Wrong role / insufficient permissions → 403
+- Expired tokens → appropriate error
+- Cross-tenant data isolation (can user A see user B's data?)
+
+#### 6. Integration (when multiple components involved)
+- End-to-end flow through all layers (API → service → DB → response)
+- Concurrent operations don't corrupt data
 
 ### Anti-Mocking Rules
 - **NEVER mock what you can use for real.** If you can test against a real database (test DB), do it.

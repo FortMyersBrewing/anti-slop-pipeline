@@ -45,6 +45,16 @@ A project-agnostic multi-agent development pipeline built on the anti-slop princ
     ✅ DONE  or  🔄 REJECT → diagnose, fix spec, re-run from scratch
 ```
 
+## Retry & Escalation
+
+On failure at ANY stage, the output is **discarded** (not patched):
+1. Failure reasons are fed back to the Scout
+2. Scout writes a new spec addressing the failure
+3. Builder re-runs from scratch with the new spec
+4. **After 3 failures** at the same stage → pipeline PAUSES, Rob is notified with full context
+
+See `prompts/pipeline-runner.md` for detailed retry logic.
+
 ## Key Principles
 1. **One agent, one task, one prompt** — focused agents produce better results
 2. **Per-agent isolation** — git worktrees, never share a checkout
@@ -53,3 +63,5 @@ A project-agnostic multi-agent development pipeline built on the anti-slop princ
 5. **Specs leave NO ambiguity** — line numbers, code snippets, exact file paths
 6. **Quality gates are automated** — no LLM opinions, just pass/fail
 7. **Hard blocks** — builder can't push, reviewer can't edit, scout can't code
+8. **Full test coverage** — happy path, bad data, boundaries, error handling, auth
+9. **3-strike rule** — auto-retry twice, then escalate to human

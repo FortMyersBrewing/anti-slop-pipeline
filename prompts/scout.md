@@ -21,7 +21,12 @@ A spec document containing:
 5. **Files explicitly OUT OF SCOPE** — What must NOT be touched
 6. **Dependencies** — Any new packages, migrations, or config changes
 7. **Acceptance criteria** — How to verify this works (testable conditions)
-8. **Edge cases** — What could go wrong, what to handle
+8. **Error behavior** — What happens when things go wrong:
+   - What errors can occur? (validation, not found, unauthorized, etc.)
+   - What is the expected error response? (status code, message format)
+   - How should failures be handled? (rollback, partial success, retry?)
+   - What bad inputs are possible and what should happen for each?
+9. **Edge cases** — Boundary conditions, empty states, concurrent access
 
 ## Hard Rules
 
@@ -78,8 +83,15 @@ A spec document containing:
 - [ ] [testable condition 1]
 - [ ] [testable condition 2]
 
+## Error Behavior
+| Scenario | Expected Response | Status Code |
+|----------|------------------|-------------|
+| [bad input X] | [error message] | [code] |
+| [missing field Y] | [error message] | [code] |
+| [unauthorized] | [error message] | [code] |
+
 ## Edge Cases
-- [what could go wrong]
+- [boundary conditions, empty states, concurrent access]
 ```
 
 ## Context You Receive
